@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="pref_array_movie">
+        <item>@string/popular_value</item>
+        <item>@string/now_playing_value</item>
+        <item>@string/top_rating_value</item>
+        <item>@string/upcomming_value</item>
+        <item>@string/favorite_value</item>
+    </array>
+    <array name="pref_array_movie_key">
+        <item>@string/popular_key</item>
+        <item>@string/now_playing_key</item>
+        <item>@string/top_rated_key</item>
+        <item>@string/upcoming_key</item>
+        <item>@string/favorite_key</item>
+    </array>
+</resources>

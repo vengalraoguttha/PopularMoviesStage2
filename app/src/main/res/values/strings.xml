@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">PopularMovies</string>
+    <string name="setting">Settings</string>
+
+    <string name="error_message">Unable to Feach Data.Please Try Later!!</string>
+
+    <string name="popular_key" translatable="false">popular</string>
+    <string name="now_playing_key" translatable="false">now_playing</string>
+    <string name="top_rated_key" translatable="false">top_rated</string>
+    <string name="upcoming_key" translatable="false">upcoming</string>
+    <string name="favorite_key" translatable="false">favorite</string>
+
+    <string name="popular_value">Popular</string>
+    <string name="now_playing_value">Now Playing</string>
+    <string name="top_rating_value">Top Rated</string>
+    <string name="upcomming_value">Up Comming</string>
+    <string name="favorite_value">Favorites</string>
+
+    <string name="pref_movie">Sort By</string>
+    <string name="pref_movie_key" translatable="false">sort_by_key</string>
+
+</resources>
