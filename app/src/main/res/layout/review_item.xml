@@ -1,17 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content">
     <TextView
-        android:textSize="@dimen/dim_sp_15"
+        android:textSize="@dimen/dim_sp_16"
         android:textStyle="bold"
+        tools:text="author name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/review_author_item"
         android:layout_marginBottom="@dimen/dim_10"
         />
     <TextView
-        android:layout_marginBottom="@dimen/dim_15"
+        android:textColor="@color/black"
+        tools:text="review"
+        android:textSize="@dimen/dim_sp_16"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/review_item"/>

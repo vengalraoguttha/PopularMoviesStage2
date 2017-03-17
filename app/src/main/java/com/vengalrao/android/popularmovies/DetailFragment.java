@@ -77,6 +77,8 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         if(intent!=null){
             Movie movie=intent.getParcelableExtra(INTENT_REC_ID);
             data=movie;
+            ActionBar actionBar=((AppCompatActivity)getActivity()).getSupportActionBar();
+            actionBar.setTitle(movie.getOriginalName());
             putData(movie);
             LinearLayoutManager trailerLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL,false);
             trailers.setLayoutManager(trailerLayoutManager);
@@ -125,9 +127,10 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                 paths[i]=NetworkUtilities.buildMoviePath(key);
             }
             trailerData=keys;
-            if(paths.length!=0){
-                first_trailer_link=paths[0];
+            if(keys.length!=0){
+                first_trailer_link=YOUTUBE_VIEW.concat(keys[0]);
             }
+
             mTrailersAdapter.getData(paths);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -177,7 +180,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         releaseDate=(TextView)view.findViewById(R.id.detail_release_date);
         overview=(TextView)view.findViewById(R.id.detail_overview);
         trailers=(RecyclerView)view.findViewById(R.id.detail_trailers);
-        noTrailers=(TextView)view.findViewById(R.id.noTrailers);
+        noTrailers=(TextView)view.findViewById(R.id.noTrailersFound);
         reviews=(RecyclerView) view.findViewById(R.id.detail_reviews_recycler_view);
         noReviews=(TextView)view.findViewById(R.id.noReviews);
         ratingBar=(RatingBar)view.findViewById(R.id.ratingBar);

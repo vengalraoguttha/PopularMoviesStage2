@@ -4,6 +4,8 @@
     <dimen name="dim_20">20dp</dimen>
     <dimen name="dim_150dp">150dp</dimen>
     <dimen name="dim_sp_15">15sp</dimen>
+    <dimen name="dim_sp_16">16sp</dimen>
+    <dimen name="dim_sp_20">20sp</dimen>
     <dimen name="dim_sp_25">25sp</dimen>
     <dimen name="dim_15">15dp</dimen>
     <dimen name="dim_4">4dp</dimen>
@@ -12,4 +14,5 @@
     <dimen name="dim_5">5dp</dimen>
     <dimen name="dim_10">10dp</dimen>
     <dimen name="dim_30">30dp</dimen>
+    <dimen name="dim_2">2dp</dimen>
 </resources>

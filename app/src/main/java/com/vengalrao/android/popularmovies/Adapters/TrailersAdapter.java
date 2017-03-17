@@ -65,7 +65,6 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.Traile
             super(view);
             trailerImage=(ImageView)view.findViewById(R.id.trailer_image);
             play=(ImageView)view.findViewById(R.id.play_outline);
-            noTrailers=(TextView)view.findViewById(R.id.no_trailer_textView);
             view.setOnClickListener(this);
         }
 

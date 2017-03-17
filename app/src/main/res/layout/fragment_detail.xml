@@ -26,6 +26,7 @@
                 <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
+                    android:layout_marginBottom="@dimen/dim_2"
                     android:layout_height="wrap_content">
                     <ImageView
                         android:scaleType="fitStart"
@@ -37,7 +38,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/dim_150dp">
                         <TextView
-                            android:textSize="@dimen/dim_sp_15"
+                            tools:text="Movie Name"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/dim_sp_20"
+                            android:layout_marginBottom="@dimen/dim_2"
                             android:layout_gravity="center"
                             android:id="@+id/detail_original_name"
                             android:layout_width="match_parent"
@@ -47,16 +51,23 @@
                             android:id="@+id/ratingBar"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
+                            android:layout_marginBottom="@dimen/dim_2"
+                            android:layout_gravity="left"
                             android:stepSize="0.25"
                             android:numStars="5"/>
                         <TextView
-                            android:textSize="@dimen/dim_sp_15"
+                            tools:text="9/10"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/dim_sp_16"
                             android:layout_width="match_parent"
+                            android:layout_marginBottom="@dimen/dim_2"
                             android:layout_height="wrap_content"
                             android:id="@+id/detail_rating"
                             />
                         <TextView
+                            tools:text="2017-02-28"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/dim_sp_16"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:id="@+id/detail_release_date"/>
@@ -73,10 +84,15 @@
                         android:textSize="@dimen/dim_sp_25"
                         android:textStyle="bold"/>
                     <TextView
+                        tools:text="overview"
+                        android:textColor="@color/black"
+                        android:layout_marginBottom="@dimen/dim_2"
+                        android:textSize="@dimen/dim_sp_16"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/detail_overview"/>
                     <TextView
+                        android:layout_marginBottom="@dimen/dim_2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/trailers_det"
@@ -89,9 +105,11 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"/>
                     <TextView
+                        tools:text="No trailers"
+                        android:textColor="@color/black"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:id="@+id/noTrailers"
+                        android:id="@+id/noTrailersFound"
                         android:visibility="invisible"
                         android:text="@string/no_trailer_data"/>
                     <TextView
@@ -107,9 +125,12 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"/>
                     <TextView
+                        tools:text="No reviews"
+                        android:textColor="@color/black"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/noReviews"
+                        android:textSize="@dimen/dim_sp_16"
                         android:visibility="invisible"
                         android:text="@string/no_reviews_data"/>
                 </LinearLayout>
