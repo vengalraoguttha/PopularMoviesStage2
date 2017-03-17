@@ -41,18 +41,11 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.Traile
 
     @Override
     public void onBindViewHolder(TrailerAdapterViewHolder holder, int position) {
-        Log.v("xxxx",path.toString());
         if(path!=null){
             String p=path[position];
             if(p!=null){
-                Log.v("aaaaa",p);
                 Picasso.with(holder.trailerImage.getContext()).load(p).into(holder.trailerImage);
             }
-        } else {
-            holder.play.setVisibility(View.INVISIBLE);
-            holder.trailerImage.setVisibility(View.INVISIBLE);
-            holder.noTrailers.setText(R.string.no_trailer_data);
-            holder.noTrailers.setVisibility(View.VISIBLE);
         }
     }
 

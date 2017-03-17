@@ -15,12 +15,12 @@
             <ImageView
                 android:scaleType="centerCrop"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="@dimen/dim_200"
                 android:id="@+id/detail_poster_back"
                 />
             <LinearLayout
                 android:orientation="vertical"
-                android:layout_margin="20dp"
+                android:layout_margin="@dimen/dim_20"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <LinearLayout
@@ -30,14 +30,14 @@
                     <ImageView
                         android:scaleType="fitStart"
                         android:id="@+id/detail_poster_main"
-                        android:layout_width="150dp"
-                        android:layout_height="150dp" />
+                        android:layout_width="@dimen/dim_150dp"
+                        android:layout_height="@dimen/dim_150dp" />
                     <LinearLayout
                         android:orientation="vertical"
                         android:layout_width="match_parent"
-                        android:layout_height="150dp">
+                        android:layout_height="@dimen/dim_150dp">
                         <TextView
-                            android:textSize="15sp"
+                            android:textSize="@dimen/dim_sp_15"
                             android:layout_gravity="center"
                             android:id="@+id/detail_original_name"
                             android:layout_width="match_parent"
@@ -51,7 +51,7 @@
                             android:stepSize="0.25"
                             android:numStars="5"/>
                         <TextView
-                            android:textSize="15sp"
+                            android:textSize="@dimen/dim_sp_15"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:id="@+id/detail_rating"
@@ -69,8 +69,8 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Overview"
-                        android:textSize="25sp"
+                        android:text="@string/overview_det"
+                        android:textSize="@dimen/dim_sp_25"
                         android:textStyle="bold"/>
                     <TextView
                         android:layout_width="match_parent"
@@ -79,8 +79,8 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Trailers"
-                        android:textSize="25sp"
+                        android:text="@string/trailers_det"
+                        android:textSize="@dimen/dim_sp_25"
                         android:textStyle="bold"
                         />
                     <android.support.v7.widget.RecyclerView
@@ -93,12 +93,12 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/noTrailers"
                         android:visibility="invisible"
-                        android:text="No Trailers available"/>
+                        android:text="@string/no_trailer_data"/>
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Reviews"
-                        android:textSize="25sp"
+                        android:text="@string/reviews_det"
+                        android:textSize="@dimen/dim_sp_25"
                         android:textStyle="bold"
                         />
                     <android.support.v7.widget.RecyclerView
@@ -111,7 +111,7 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/noReviews"
                         android:visibility="invisible"
-                        android:text="No Trailers available"/>
+                        android:text="@string/no_reviews_data"/>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

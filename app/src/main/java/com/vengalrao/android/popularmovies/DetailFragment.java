@@ -60,6 +60,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     private static String YOUTUBE_VIEW="https://www.youtube.com/watch?v=";
     private String[] trailerData;
     private Movie data;
+    private static String first_trailer_link;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -70,33 +71,33 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_detail, container, false);
         findViews(view);
         Intent intent=getActivity().getIntent();
-        Movie movie=intent.getParcelableExtra(INTENT_REC_ID);
-        data=movie;
-        putData(movie);
-        LinearLayoutManager trailerLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL,false);
-        trailers.setLayoutManager(trailerLayoutManager);
-        trailers.setHasFixedSize(true);
-        mTrailersAdapter=new TrailersAdapter(this);
-        trailers.setAdapter(mTrailersAdapter);
+        if(intent!=null){
+            Movie movie=intent.getParcelableExtra(INTENT_REC_ID);
+            data=movie;
+            putData(movie);
+            LinearLayoutManager trailerLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL,false);
+            trailers.setLayoutManager(trailerLayoutManager);
+            trailers.setHasFixedSize(true);
+            mTrailersAdapter=new TrailersAdapter(this);
+            trailers.setAdapter(mTrailersAdapter);
 
-        mReviewAdapter=new ReviewAdapter();
-        LinearLayoutManager reviewLayoutManager=new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL,false);
-        reviews.setLayoutManager(reviewLayoutManager);
-        reviews.setHasFixedSize(true);
-        reviews.setAdapter(mReviewAdapter);
-        trailers.setNestedScrollingEnabled(false);
-        reviews.setNestedScrollingEnabled(false);
-        load(movie);
+            mReviewAdapter=new ReviewAdapter();
+            LinearLayoutManager reviewLayoutManager=new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL,false);
+            reviews.setLayoutManager(reviewLayoutManager);
+            reviews.setHasFixedSize(true);
+            reviews.setAdapter(mReviewAdapter);
+            trailers.setNestedScrollingEnabled(false);
+            reviews.setNestedScrollingEnabled(false);
+            load(movie);
+        }
         return view;
     }
 
     public void load(Movie movie){
         Bundle bundle=new Bundle();
-        Log.v("aaa","id:"+movie.getId());
         bundle.putString(KEY_B,movie.getId());
         LoaderManager loaderManager=getLoaderManager();
         Loader<String> movieLoader=loaderManager.getLoader(LOADER_ID);
@@ -111,6 +112,10 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         try {
             JSONObject object=new JSONObject(data);
             JSONArray array=object.getJSONArray("results");
+            if(array.length()==0){
+                showErrorMessage();
+                return;
+            }
             String[] paths=new String[array.length()];
             String[] keys=new String[array.length()];
             for(int i=0;i<array.length();i++){
@@ -118,9 +123,11 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                 String key=jsonObject.getString("key");
                 keys[i]=key;
                 paths[i]=NetworkUtilities.buildMoviePath(key);
-                Log.v("aaa",paths[i]+" "+NetworkUtilities.buildMoviePath(key)+" "+key);
             }
             trailerData=keys;
+            if(paths.length!=0){
+                first_trailer_link=paths[0];
+            }
             mTrailersAdapter.getData(paths);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -130,7 +137,13 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     public void parse_review(String data){
         try {
             JSONObject object=new JSONObject(data);
+            String total=object.getString("total_results");
+            if(total.equals("0")){
+                showErrorReview();
+                return;
+            }
             JSONArray array=object.getJSONArray("results");
+
             String[] author=new String[array.length()];
             String[] review=new String[array.length()];
             for(int i=0;i<array.length();i++){
@@ -177,7 +190,6 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             public Coll loadInBackground() {
                 URL url=NetworkUtilities.buildUrlMovie(args.getString(KEY_B));
                 URL review_url=NetworkUtilities.buildUrlReview(args.getString(KEY_B));
-                Log.v("aaa",url.toString());
                 String data=NetworkUtilities.getResposeFromHttpUrl(url);
                 String review=NetworkUtilities.getResposeFromHttpUrl(review_url);
                 Coll coll=new Coll();
@@ -196,7 +208,6 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
     @Override
     public void onLoadFinished(Loader<Coll> loader, Coll data) {
-        Log.v("aaa","data:"+data);
         if(data!=null&&!data.equals("")){
             parse(data.s1);
             parse_review(data.s2);
@@ -214,6 +225,16 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     public void showErrorMessage(){
         noTrailers.setVisibility(View.VISIBLE);
         trailers.setVisibility(View.INVISIBLE);
+    }
+
+    public void showReviewData(){
+        noReviews.setVisibility(View.INVISIBLE);
+        reviews.setVisibility(View.VISIBLE);
+    }
+
+    public void showErrorReview(){
+        noReviews.setVisibility(View.VISIBLE);
+        reviews.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -251,9 +272,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                 null,
                 null
         );
-        Log.v("uri",cursor.toString());
         cursor.moveToFirst();
-        Log.v("uri","count "+cursor.getCount());
         for(int i=0;i<cursor.getCount();i++){
            if(cursor.getString(cursor.getColumnIndex(MovieContract.MovieDetail.MOVIE_ID)).equals(data.getId())){
                return true;
@@ -266,26 +285,37 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id=item.getItemId();
-        Log.v("yyy","aa");
-        if(id==R.id.favorite_action){
-            Log.v("uri","entered1");
-            Log.v("uri",""+id+" "+R.drawable.ic_favorite_border_white_24dp+" "+R.drawable.ic_favorite_pink_24px);
-            if(item.getIcon().getConstantState().equals(getResources().getDrawable(R.drawable.ic_favorite_border_white_24dp).getConstantState())){
-                Log.v("uri","entered");
-                Uri uri=insertIntoDataBase();
-                if(uri!=null){
-                    item.setIcon(R.drawable.ic_favorite_pink_24px);
+        switch (id){
+            case R.id.favorite_action:
+                if(item.getIcon().getConstantState().equals(getResources().getDrawable(R.drawable.ic_favorite_border_white_24dp).getConstantState())){
+                    Uri uri=insertIntoDataBase();
+                    if(uri!=null){
+                        Toast.makeText(getContext(),getContext().getString(R.string.toast_fav_added),Toast.LENGTH_SHORT).show();
+                        item.setIcon(R.drawable.ic_favorite_pink_24px);
+                    }else{
+                        Toast.makeText(getContext(),getContext().getString(R.string.toast_fav_failed),Toast.LENGTH_SHORT).show();
+                    }
+                }else if(item.getIcon().getConstantState().equals(getResources().getDrawable(R.drawable.ic_favorite_pink_24px).getConstantState())){
+                    int del=deleteFromDataBase();
+                    if(del>0){
+                        item.setIcon(R.drawable.ic_favorite_border_white_24dp);
+                        Toast.makeText(getContext(),getContext().getString(R.string.toast_fav_removed),Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(getContext(),getContext().getString(R.string.toast_fav_removed_failed),Toast.LENGTH_SHORT).show();
+                    }
                 }
-            }else if(item.getIcon().getConstantState().equals(getResources().getDrawable(R.drawable.ic_favorite_pink_24px).getConstantState())){
-                int del=deleteFromDataBase();
-                Log.v("uri del",""+del);
-                if(del>0){
-                    item.setIcon(R.drawable.ic_favorite_border_white_24dp);
-                }
-            }
-            return true;
+                return true;
+            case R.id.share_detail:
+                Intent intent=new Intent();
+                intent.setAction(Intent.ACTION_SEND);
+                intent.putExtra(Intent.EXTRA_TEXT,first_trailer_link);
+                intent.setType("text/plain");
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
+
     }
 
     public int deleteFromDataBase(){
@@ -304,8 +334,6 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         contentValues.put(MovieContract.MovieDetail.BACKDROP_PATH,data.getBackDropPath());
         contentValues.put(MovieContract.MovieDetail.OVERVIEW,data.getOverview());
         Uri uri=getContext().getContentResolver().insert(MovieContract.MovieDetail.CONTENT_URI_FAV_DET,contentValues);
-        Log.v("uriuuuuuuuuuuuu",data.getOriginalName());
-        Log.v("uri",uri.toString());
         return uri;
     }
 }

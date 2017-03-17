@@ -37,11 +37,9 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
     @Override
     public void onBindViewHolder(MovieAdapterViewHolder holder, int position) {
         Movie currentMovie=movies[position];
-        Log.v("uri::",currentMovie.getOriginalName());
         if (currentMovie!=null){
             Picasso.with(holder.poster.getContext()).load(currentMovie.getPosterPath()).into(holder.poster);
             holder.name.setText(currentMovie.getOriginalName());
-            Log.v("Mov",currentMovie.getRating());
             holder.rating.setText(currentMovie.getRating());
         }
     }
@@ -78,16 +76,12 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
         @Override
         public void onClick(View v) {
             int clickedPosition=getAdapterPosition();
-            Log.v("Mov",""+clickedPosition);
             mGridItemClickListener.onGridItemClick(clickedPosition);
         }
     }
 
     public void setData(Movie[] data){
         movies=data;
-        if(movies!=null){
-            Log.v("uri:ada",movies[0].getOriginalName());
-        }
         notifyDataSetChanged();
     }
 }
