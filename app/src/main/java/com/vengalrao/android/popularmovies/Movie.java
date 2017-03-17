@@ -89,6 +89,7 @@ public class Movie implements Parcelable {
         dest.writeString(backDropPath);
         dest.writeString(releaseDate);
         dest.writeString(overview);
+        dest.writeString(id);
     }
 
     private void readFromParcel(Parcel in){
@@ -98,6 +99,7 @@ public class Movie implements Parcelable {
         backDropPath=in.readString();
         releaseDate=in.readString();
         overview=in.readString();
+        id=in.readString();
     }
 
     public static final Parcelable.Creator<Movie> CREATOR=new Parcelable.Creator<Movie>(){

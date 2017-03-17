@@ -3,6 +3,7 @@ package com.vengalrao.android.popularmovies;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.database.Cursor;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
@@ -19,6 +20,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.vengalrao.android.popularmovies.Data.MovieContract;
 import com.vengalrao.android.popularmovies.Utilities.NetworkUtilities;
 
 import org.json.JSONArray;
@@ -54,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Grid
 
         GridLayoutManager gridLayoutManager=new GridLayoutManager(this,columns);
         mRecyclerView.setLayoutManager(gridLayoutManager);
-        mMovieAdapter=new MovieAdapter(this);
+        mMovieAdapter=new MovieAdapter(this,this);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setAdapter(mMovieAdapter);
 
@@ -62,12 +64,17 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Grid
 
     }
 
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadData();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater=getMenuInflater();
         inflater.inflate(R.menu.movie_menu,menu);
+        menu.getItem(0).setVisible(false);
         return true;
     }
 
@@ -85,16 +92,51 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Grid
     public void loadData(){
         Bundle bundle=new Bundle();
         SharedPreferences sharedPreferences= PreferenceManager.getDefaultSharedPreferences(this);
-        Log.v("xxx",sharedPreferences.getString(getString(R.string.pref_movie_key),getString(R.string.popular_key)));
-        bundle.putString(KEY,sharedPreferences.getString(getString(R.string.pref_movie_key),getString(R.string.popular_key)));
-        LoaderManager loaderManager=getSupportLoaderManager();
-        Loader<String> movieLoader=loaderManager.getLoader(LOADER_ID);
-        if(movieLoader==null){
-            loaderManager.initLoader(LOADER_ID,bundle,this);
-        }else{
-            loaderManager.restartLoader(LOADER_ID,bundle,this);
-        }
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+        String s=sharedPreferences.getString(getString(R.string.pref_movie_key),getString(R.string.popular_key));
+        Log.v("uri",s);
+        if(s.equals(getResources().getString(R.string.favorite_key))){
+            Log.v("uri","data");
+            formDataBase();
+        }else{
+            Log.v("uri",s);
+            bundle.putString(KEY,sharedPreferences.getString(getString(R.string.pref_movie_key),getString(R.string.popular_key)));
+            LoaderManager loaderManager=getSupportLoaderManager();
+            Loader<String> movieLoader=loaderManager.getLoader(LOADER_ID);
+            if(movieLoader==null){
+                loaderManager.initLoader(LOADER_ID,bundle,this);
+            }else{
+                loaderManager.restartLoader(LOADER_ID,bundle,this);
+            }
+        }
+    }
+
+    public void formDataBase(){
+        Cursor cursor=getContentResolver().query(MovieContract.MovieDetail.CONTENT_URI_FAV_DET,
+                null,
+                null,
+                null,
+                null
+                );
+        Log.v("uri",cursor.toString());
+        Movie[] movies=new Movie[cursor.getCount()];
+        cursor.moveToFirst();
+        Log.v("uri","count "+cursor.getCount());
+        for(int i=0;i<cursor.getCount();i++){
+            Log.v("uri",cursor.getString(cursor.getColumnIndex(MovieContract.MovieDetail.MOVIE_NAME)));
+            movies[i]=new Movie();
+            movies[i].setId(cursor.getString(cursor.getColumnIndex(MovieContract.MovieDetail.MOVIE_ID)));
+            movies[i].setOriginalName(cursor.getString(cursor.getColumnIndex(MovieContract.MovieDetail.MOVIE_NAME)));
+            movies[i].setRating(cursor.getString(cursor.getColumnIndex(MovieContract.MovieDetail.RATING)));
+            movies[i].setPosterPath(cursor.getString(cursor.getColumnIndex(MovieContract.MovieDetail.POSTER_PATH)));
+            movies[i].setBackDropPath(cursor.getString(cursor.getColumnIndex(MovieContract.MovieDetail.BACKDROP_PATH)));
+            movies[i].setReleaseDate(cursor.getString(cursor.getColumnIndex(MovieContract.MovieDetail.RELEASE_DATE)));
+            movies[i].setOverview(cursor.getString(cursor.getColumnIndex(MovieContract.MovieDetail.OVERVIEW)));
+            cursor.moveToNext();
+        }
+        movieData=movies;
+        Log.v("uriaaa",movies[0].getOriginalName());
+        mMovieAdapter.setData(movies);
     }
 
     @Override
@@ -148,7 +190,9 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Grid
     @Override
     public void onLoadFinished(android.support.v4.content.Loader loader, String data) {
         if(data!=null&&!data.equals("")){
-            parseJson(data);
+            if(!PreferenceManager.getDefaultSharedPreferences(this).getString(getString(R.string.pref_movie_key),getString(R.string.popular_key)).equals(getString(R.string.favorite_key))){
+                parseJson(data);
+            }
             showMovieData();
         }else {
             showErrorMessage();
@@ -169,13 +213,15 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Grid
                 if(movies[i]!=null){
                     movies[i].setPosterPath(NetworkUtilities.buidPosterPath(path));
                     movies[i].setRating(jsonObject.getString("vote_average"));
-                    movies[i].setBackDropPath(jsonObject.getString("backdrop_path"));
+                    movies[i].setBackDropPath(NetworkUtilities.buidPosterPath(jsonObject.getString("backdrop_path")));
                     movies[i].setId(jsonObject.getString("id"));
+                    Log.v("aaa","i:"+movies[i].getId());
                     movies[i].setOriginalName(jsonObject.getString("original_title"));
                     movies[i].setOverview(jsonObject.getString("overview"));
                     movies[i].setReleaseDate(jsonObject.getString("release_date"));
                 }
             }
+            Log.v("uri ee",movies[0].getOriginalName());
             movieData=movies;
             mMovieAdapter.setData(movies);
         } catch (JSONException e) {
@@ -192,4 +238,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Grid
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         loadData();
     }
+
+
 }

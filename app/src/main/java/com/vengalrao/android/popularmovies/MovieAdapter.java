@@ -1,6 +1,9 @@
 package com.vengalrao.android.popularmovies;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.support.v7.preference.PreferenceManager;
+import android.support.v7.preference.PreferenceScreen;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,6 +22,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
 
     final private GridItemClickListener mGridItemClickListener;
     Movie[] movies;
+    Context mContext;
 
     @Override
     public MovieAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -33,6 +37,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
     @Override
     public void onBindViewHolder(MovieAdapterViewHolder holder, int position) {
         Movie currentMovie=movies[position];
+        Log.v("uri::",currentMovie.getOriginalName());
         if (currentMovie!=null){
             Picasso.with(holder.poster.getContext()).load(currentMovie.getPosterPath()).into(holder.poster);
             holder.name.setText(currentMovie.getOriginalName());
@@ -53,8 +58,9 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
         void onGridItemClick(int clickedPosition);
     }
 
-    public MovieAdapter(GridItemClickListener listener){
+    public MovieAdapter(GridItemClickListener listener,Context context){
         mGridItemClickListener=listener;
+        mContext=context;
     }
 
     class MovieAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
@@ -79,6 +85,9 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
 
     public void setData(Movie[] data){
         movies=data;
+        if(movies!=null){
+            Log.v("uri:ada",movies[0].getOriginalName());
+        }
         notifyDataSetChanged();
     }
 }

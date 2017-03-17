@@ -19,4 +19,10 @@
     <string name="pref_movie">Sort By</string>
     <string name="pref_movie_key" translatable="false">sort_by_key</string>
 
+    <string name="no_trailer_data">No Trailers found.</string>
+    <string name="no_reviews_data">No Reviews found.</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>
