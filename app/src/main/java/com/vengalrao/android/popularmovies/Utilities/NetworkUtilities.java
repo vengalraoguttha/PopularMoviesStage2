@@ -16,7 +16,7 @@ import java.util.Scanner;
 public class NetworkUtilities {
     private static String BASE_URL="https://api.themoviedb.org/3/movie";
     private static String API="api_key";
-    private static String KEY="d428b914188c3afd543156a85a97e919";
+    private static String KEY="YOUR_API_KEY";
     private static String IMAGE_BASE_URL="http://image.tmdb.org/t/p/w500";
     private static String YOUTUBE_BASE="http://img.youtube.com/vi/";
     private static String END="/hqdefault.jpg";
